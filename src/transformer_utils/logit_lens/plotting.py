@@ -70,10 +70,12 @@ def _plot_logit_lens(
     probs=False,
     ranks=False,
     kl=False,
+    compare_to_gt=False,
 ):
     end_ix = start_ix + layer_logits.shape[1]
 
     final_preds = layer_preds[-1]
+    gt = torch.nn.functional.pad(input_ids, (-1, 1, 0, 0))
 
     aligned_preds = layer_preds
 
@@ -83,8 +85,11 @@ def _plot_logit_lens(
         to_show = kl_div(final_probs, layer_probs, clip=clip)
     else:
         numeric_input = layer_probs if probs else layer_logits
-
-        to_show = get_value_at_preds(numeric_input, final_preds)
+        
+        if compare_to_gt:
+            to_show = get_value_at_preds(numeric_input, gt)
+        else:
+            to_show = get_value_at_preds(numeric_input, final_preds)
 
         if ranks:
             to_show = (numeric_input >= to_show[:, :, np.newaxis]).sum(axis=-1)
@@ -171,6 +176,7 @@ def plot_logit_lens(
     probs=False,
     ranks=False,
     kl=False,
+    compare_to_gt=False,
     block_step=1,
     include_input=True,
     force_include_output=True,
@@ -221,6 +227,8 @@ def plot_logit_lens(
             draw a "Ranks" plot (overrides `probs`)
         kl:
             draw a "KL" plot (overrides `probs`, `ranks`)
+        compare_to_gt:
+            whether to compare to the ground truth next token instead of the last layer's prediction of the next token
         block_step:
             stride when choosing blocks to plot, e.g. block_step=2 skips every other block
         include_input:
@@ -269,5 +277,6 @@ def plot_logit_lens(
         probs=probs,
         ranks=ranks,
         kl=kl,
+        compare_to_gt=compare_to_gt,
         layer_names=layer_names,
     )
