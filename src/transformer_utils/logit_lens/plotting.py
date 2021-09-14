@@ -86,11 +86,12 @@ def _plot_logit_lens(
     else:
         numeric_input = layer_probs if probs else layer_logits
         
+        print("numeric input", numeric_input.shape)
         if compare_to_gt:
-            print("numeric input", numeric_input.shape)
             print("gt", gt.shape)
             to_show = get_value_at_preds(numeric_input, gt)
         else:
+            print("final_preds", final_preds.shape)
             to_show = get_value_at_preds(numeric_input, final_preds)
 
         if ranks:
