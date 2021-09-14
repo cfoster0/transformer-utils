@@ -75,7 +75,7 @@ def _plot_logit_lens(
     end_ix = start_ix + layer_logits.shape[1]
 
     final_preds = layer_preds[-1]
-    gt = torch.nn.functional.pad(input_ids, (-1, 1, 0, 0))
+    gt = torch.nn.functional.pad(input_ids, (-1, 1, 0, 0)).cpu()
 
     aligned_preds = layer_preds
 
