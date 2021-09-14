@@ -75,7 +75,7 @@ def _plot_logit_lens(
     end_ix = start_ix + layer_logits.shape[1]
 
     final_preds = layer_preds[-1]
-    gt = torch.nn.functional.pad(input_ids, (-1, 1, 0, 0)).cpu()
+    gt = torch.nn.functional.pad(input_ids[0], (-1, 1)).cpu()
 
     aligned_preds = layer_preds
 
@@ -86,12 +86,9 @@ def _plot_logit_lens(
     else:
         numeric_input = layer_probs if probs else layer_logits
         
-        print("numeric input", numeric_input.shape)
         if compare_to_gt:
-            print("gt", gt.shape)
             to_show = get_value_at_preds(numeric_input, gt)
         else:
-            print("final_preds", final_preds.shape)
             to_show = get_value_at_preds(numeric_input, final_preds)
 
         if ranks:
