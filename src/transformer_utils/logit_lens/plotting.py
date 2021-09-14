@@ -87,6 +87,8 @@ def _plot_logit_lens(
         numeric_input = layer_probs if probs else layer_logits
         
         if compare_to_gt:
+            print("numeric input", numeric_input.shape)
+            print("gt", gt.shape)
             to_show = get_value_at_preds(numeric_input, gt)
         else:
             to_show = get_value_at_preds(numeric_input, final_preds)
